@@ -220,7 +220,8 @@ def checkout(username): # fungsi checkout
                     'harga': produk[id_produk]['harga'],
                     'subtotal': subtotal
                 }
-                order['total'] += subtotal
+                order['total'] += subtotal # menambahkan subtotal ke total pesanan 
+                print(f"Produk {produk[id_produk]['nama']} berhasil di-checkout")
             else:
                 print(f"Stok {produk[id_produk]['nama']} tidak mencukupi!")
                 return
@@ -244,7 +245,7 @@ def lihat_pesanan(): # fungsi lihat pesanan
 
 def user_pesanan(username): # fungsi riwayat pesanan user
     print(f"\n=== RIWAYAT PESANAN {username} ===")
-    pesanan_pengguna = [order for order in pesanan if order['username'] == username]
+    pesanan_pengguna = [order for order in pesanan if order['username'] == username] # menampilkan riwayat pesanan user dari list pesanan yang memiliki username yang sama
     
     for i, order in enumerate(pesanan_pengguna, 1):
         print(f"\nPesanan #{i}")
