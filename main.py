@@ -28,7 +28,7 @@ def register_user(): # fungsi register user
     while True:
         print("\n=== REGISTER USER ===")
         username = input("Masukkan username baru: ")
-        if username in users:
+        if username in users:# cek apakah username sudah digunakan
             print("Username sudah digunakan! Tekan Enter untuk mencoba lagi.")
             input()
             continue
@@ -36,12 +36,12 @@ def register_user(): # fungsi register user
         password = input("Masukkan password: ")
         konfirmasi_password = input("Konfirmasi password: ")
 
-        if password != konfirmasi_password:
+        if password != konfirmasi_password: # cek apakah password dan konfirmasi password cocok
             print("Password tidak cocok! Tekan Enter untuk mencoba lagi.")
             input()
             continue
 
-        users[username] = {'password': password, 'role': 'user'}
+        users[username] = {'password': password, 'role': 'user'} # tambahkan user baru ke dictionary users
         print("Registrasi berhasil! Tekan Enter untuk kembali ke menu utama.")
         input()
         break
@@ -88,7 +88,7 @@ def user_menu(username): # fungsi menu user
         if choice == '1':
             lihat_produk()
         elif choice == '2':
-            keranjang_belanja(username)
+            keranjang_belanja(username) # memanggil fungsi keranjang belanja dengan username
         elif choice == '3':
             lihat_keranjang(username)
         elif choice == '4':
@@ -103,7 +103,7 @@ def lihat_produk(): # fungsi lihat produk
     print("ID | Nama | Harga | Stok")
     print("-" * 40)
     for id_produk, product in produk.items():
-        print(f"{id_produk} | {product['nama']} | Rp{product['harga']:,} | {product['stok']}")
+        print(f"{id_produk} | {product['nama']} | Rp{product['harga']:,} | {product['stok']}") # menampilkan data produk dengan format ID, Nama, Harga dan Stok
     input("\nTekan Enter untuk kembali...")
 
 def tambah_produk(): # fungsi tambah produk
@@ -112,8 +112,9 @@ def tambah_produk(): # fungsi tambah produk
     harga = int(input("Harga: "))
     stok = int(input("Stok: "))
     
-    id_produk = max(produk.keys()) + 1 if produk else 1
-    produk[id_produk] = {
+    # menentukan ID produk berikutnya jika ada produk sebelumnya
+    id_produk = max(produk.keys()) + 1 if produk else 1 # atau jika tidak ada produk, ID produk awal adalah 1
+    produk[id_produk] = { # menambahkan produk baru ke dictionary produk
         'nama': nama,
         'harga': harga,
         'stok': stok
@@ -122,7 +123,7 @@ def tambah_produk(): # fungsi tambah produk
     input("\nTekan Enter untuk kembali...")
 
 def edit_produk(): # fungsi edit produk
-    lihat_produk()
+    lihat_produk() # menampilkan daftar produk
     id_produk = int(input("\nMasukkan ID produk yang akan diedit: "))
     
     if id_produk in produk:
@@ -144,19 +145,19 @@ def edit_produk(): # fungsi edit produk
     input("\nTekan Enter untuk kembali...")
 
 def hapus_produk(): # fungsi hapus produk
-    lihat_produk()
+    lihat_produk() # menampilkan daftar produk
     id_produk = int(input("\nMasukkan ID produk yang akan dihapus: "))
     
-    if id_produk in produk:
-        del produk[id_produk]
+    if id_produk in produk: # jika ID produk ditemukan dalam dictionary
+        del produk[id_produk] # maka hapus produk dengan ID tersebut
         print("Produk berhasil dihapus!")
     else:
         print("ID produk tidak ditemukan!")
     input("\nTekan Enter untuk kembali...")
 
 def keranjang_belanja(username): # fungsi keranjang belanja
-    if username not in keranjang:
-        keranjang[username] = {}
+    if username not in keranjang: # jika username belum ada dalam dictionary keranjang belanja
+        keranjang[username] = {} # maka buat keranjang belanja baru
     
     lihat_produk() # menampilkan daftar produk
     id_produk = int(input("\nMasukkan ID produk: "))
@@ -165,9 +166,9 @@ def keranjang_belanja(username): # fungsi keranjang belanja
         kuantitas = int(input("Masukkan jumlah: "))
         if kuantitas <= produk[id_produk]['stok']:
             if id_produk in keranjang[username]:
-                keranjang[username][id_produk] += kuantitas 
+                keranjang[username][id_produk] += kuantitas  # jika produk sudah ada dalam keranjang, tambahkan kuantitas
             else:
-                keranjang[username][id_produk] = kuantitas
+                keranjang[username][id_produk] = kuantitas # jika produk belum ada dalam keranjang, tambahkan produk baru
             print("Produk berhasil ditambahkan ke keranjang!")
         else:
             print("Stok tidak mencukupi!")
@@ -183,7 +184,7 @@ def lihat_keranjang(username): # fungsi lihat keranjang
     
     print("\n=== ISI KERANJANG ===")
     total = 0
-    for id_produk, kuantitas in keranjang[username].items():
+    for id_produk, kuantitas in keranjang[username].items(): # menampilkan isi keranjang belanja dengan format ID, Nama, Harga dan Kuantitas
         subtotal = kuantitas * produk[id_produk]['harga']
         total += subtotal
         print(f"{produk[id_produk]['nama']} | {kuantitas} x Rp{produk[id_produk]['harga']:,} = Rp{subtotal:,}")
@@ -192,24 +193,24 @@ def lihat_keranjang(username): # fungsi lihat keranjang
     input("\nTekan Enter untuk kembali...")
 
 def checkout(username): # fungsi checkout
-    if username not in keranjang or not keranjang[username]:
-        print("\nKeranjang kosong!")
+    if username not in keranjang or not keranjang[username]: # jika keranjang belanja kosong atau username tidak ada dalam keranjang
+        print("\nKeranjang kosong!") # maka tampilkan pesan keranjang kosong
         input("\nTekan Enter untuk kembali...")
         return
     
     print("\n=== CHECKOUT ===")
-    lihat_keranjang(username)
-    confirm = input("\nLanjutkan checkout? (y/n): ")
+    lihat_keranjang(username) # menampilkan isi keranjang belanja 
+    confirm = input("\nLanjutkan checkout? (y/n): ") # meminta konfirmasi untuk melanjutkan checkout
     
     if confirm.lower() == 'y':
-        order = {
+        order = { # membuat pesanan baru dengan data pesanan dari keranjang belanja
             'username': username,
-            'items': {},
-            'total': 0,
-            'date': datetime.now()
+            'items': {}, # dictionary untuk menyimpan item-item pesanan
+            'total': 0, # variabel untuk menyimpan total harga
+            'date': datetime.now() # variabel untuk menyimpan tanggal pesanan
         }
         
-        for id_produk, kuantitas in keranjang[username].items():
+        for id_produk, kuantitas in keranjang[username].items(): # menambahkan item-item pesanan ke dictionary 
             if kuantitas <= produk[id_produk]['stok']:
                 produk[id_produk]['stok'] -= kuantitas
                 subtotal = kuantitas * produk[id_produk]['harga']
@@ -224,19 +225,19 @@ def checkout(username): # fungsi checkout
                 print(f"Stok {produk[id_produk]['nama']} tidak mencukupi!")
                 return
         
-        pesanan.append(order)
-        keranjang[username].clear()
+        pesanan.append(order) # menambahkan pesanan baru ke list pesanan
+        keranjang[username].clear() # mengosongkan keranjang belanja setelah checkout
         print("Checkout berhasil!")
     input("\nTekan Enter untuk kembali...")
 
 def lihat_pesanan(): # fungsi lihat pesanan
     print("\n=== DAFTAR PESANAN ===")
-    for i, order in enumerate(pesanan, 1):
+    for i, order in enumerate(pesanan, 1): # menampilkan daftar pesanan dengan format ID, Username, Tanggal, Items, Total dan Status
         print(f"\nPesanan #{i}")
         print(f"Username: {order['username']}")
-        print(f"Tanggal: {order['date'].strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Tanggal: {order['date'].strftime('%Y-%m-%d %H:%M:%S')}") # mengubah format tanggal menjadi YYYY-MM-DD HH:MM:SS
         print("Items:")
-        for item in order['items'].values():
+        for item in order['items'].values(): # menampilkan item-item pesanan dengan format Nama, Kuantitas, Harga dan Subtotal
             print(f"- {item['nama']} | {item['kuantitas']} x Rp{item['harga']:,} = Rp{item['subtotal']:,}")
         print(f"Total: Rp{order['total']:,}")
     input("\nTekan Enter untuk kembali...")
